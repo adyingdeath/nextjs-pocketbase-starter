@@ -1,4 +1,9 @@
 import { getUser, logout } from "@/pocketbase/actions/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Home"
+}
 
 export default async function Home() {
   const user = await getUser();
