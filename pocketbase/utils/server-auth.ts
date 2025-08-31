@@ -4,7 +4,7 @@ import { createServerClient } from "@/pocketbase/clients/server";
 import { cookies } from "next/headers";
 import { COOKIES_NAME } from "@/pocketbase/constants";
 import { redirect } from "next/navigation";
-import { AuthRecord } from "pocketbase";
+import { UsersResponse } from "@/pocketbase/clients/pocketbase-types";
 
 // Some basic auth actions
 
@@ -39,22 +39,15 @@ export async function logout() {
     redirect("/sign-in");
 }
 
-type UserInfo = AuthRecord & {
-    created: string,
-    updated: string,
-    email: string,
-    emailVisibility: boolean,
-    name: string,
-    avatar: string,
-    verified: boolean,
-}
-
-export async function getUser() {
+/**
+ * (Server Side) Get the currently authenticated user from the server-side session
+ */
+export async function getUser(): Promise<UsersResponse | null> {
     const pb = await createServerClient();
 
     if (pb.authStore.isValid) {
-        return pb.authStore.record as UserInfo;
+        return pb.authStore.record as UsersResponse;
     } else {
-        null
+        return null;
     }
 }

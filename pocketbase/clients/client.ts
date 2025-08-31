@@ -6,15 +6,15 @@ import PocketBase from "pocketbase";
 let singletonClient: TypedPocketBase | null = null;
 
 export function createBrowserClient() {
-    const createNewClient = () => {
-        return new PocketBase(
+    if (singletonClient === null) {
+        singletonClient = new PocketBase(
             process.env.NEXT_PUBLIC_POCKETBASE_URL
         ) as TypedPocketBase;
-    };
+    }
 
-    const _singletonClient = singletonClient ?? createNewClient();
+    singletonClient.authStore.loadFromCookie(document.cookie);
 
-    if (!singletonClient) singletonClient = _singletonClient;
+    console.log(singletonClient.authStore);
 
     singletonClient.authStore.onChange(() => {
         document.cookie = singletonClient!.authStore.exportToCookie({

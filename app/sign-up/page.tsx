@@ -1,4 +1,4 @@
-import { signupWithEmailPassword } from "@/pocketbase/actions/auth";
+import { signupWithEmailPassword } from "@/pocketbase/utils/server-auth";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
