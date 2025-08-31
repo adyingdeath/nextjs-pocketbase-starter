@@ -12,7 +12,7 @@ export async function createServerClient() {
 
     const authCookie = (await cookies()).get(COOKIES_NAME);
     if (authCookie) {
-        client.authStore.loadFromCookie(`${authCookie.name}=${authCookie.value}`);
+        client.authStore.loadFromCookie(authCookie.value);
     }
 
     return client;

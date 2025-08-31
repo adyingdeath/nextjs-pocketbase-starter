@@ -1,4 +1,4 @@
-import { createServerClient } from "@/pocketbase/clients/server";
+import { signinWithEmailPassword } from "@/pocketbase/actions/auth";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,9 +15,7 @@ async function signin(data: FormData) {
         return;
     }
 
-    const pb = await createServerClient();
-
-    await pb.collection("users").authWithPassword(email, password);
+    await signinWithEmailPassword(email, password);
 }
 
 export default async function page() {
