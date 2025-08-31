@@ -7,8 +7,6 @@ import { UsersResponse } from "@/pocketbase/clients/pocketbase-types";
 export function getUser(): UsersResponse | null {
     const pb = createBrowserClient();
 
-    console.log(pb.authStore);
-
     if (pb.authStore.isValid) {
         return pb.authStore.record as UsersResponse;
     } else {
