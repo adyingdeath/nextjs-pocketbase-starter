@@ -12,6 +12,13 @@ export async function updateSession(request: NextRequest) {
     // Create PocketBase client - similar to Supabase's createServerClient with custom cookies
     const pb = await createServerClient();
 
+    if (!pb.authStore.isValid) {
+        pb.authStore.clear();
+        pbResponse.cookies.delete(COOKIES_NAME);
+
+        return pbResponse;
+    }
+
     // IMPORTANT: DO NOT REMOVE authRefresh()
     // This mimics supabase.auth.getUser() - it's our server-side auth validation
     try {
@@ -36,11 +43,8 @@ export async function updateSession(request: NextRequest) {
         return pbResponse
     }
 
-    // Now check the user state after potential refresh
-    const currentUser = pb.authStore.record
-
     if (
-        !currentUser &&
+        !pb.authStore.isValid &&
         !request.nextUrl.pathname.startsWith('/sign-in') &&
         !request.nextUrl.pathname.startsWith('/sign-up') &&
         !request.nextUrl.pathname.startsWith('/api/auth')
