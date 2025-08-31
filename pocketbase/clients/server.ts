@@ -1,0 +1,19 @@
+import "server-only";
+
+import { TypedPocketBase } from "./pocketbase-types";
+import PocketBase from "pocketbase";
+import { COOKIES_NAME } from "../constants";
+import { cookies } from "next/headers";
+
+export async function createServerClient() {
+    const client = new PocketBase(
+        process.env.NEXT_PUBLIC_POCKETBASE_URL
+    ) as TypedPocketBase;
+
+    const authCookie = (await cookies()).get(COOKIES_NAME);
+    if (authCookie) {
+        client.authStore.loadFromCookie(`${authCookie.name}=${authCookie.value}`);
+    }
+
+    return client;
+}

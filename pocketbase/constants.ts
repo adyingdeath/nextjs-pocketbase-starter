@@ -1,0 +1,1 @@
+export const COOKIES_NAME = "pb_auth";
