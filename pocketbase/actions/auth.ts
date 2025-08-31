@@ -29,7 +29,7 @@ export async function signinWithEmailPassword(email: string, password: string) {
 
     await pb.collection("users").authWithPassword(email, password);
     (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
-    redirect("/dashboard");
+    redirect("/");
 }
 
 export async function logout() {

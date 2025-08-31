@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/pocketbase/clients/server";
-import { redirect } from "next/navigation";
 
 /**
  * Handle email confirmation callback.
