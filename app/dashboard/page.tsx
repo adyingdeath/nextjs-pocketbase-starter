@@ -1,5 +1,7 @@
 import { createServerClient } from "@/pocketbase/clients/server";
+import { COOKIES_NAME } from "@/pocketbase/constants";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Dashboard"
@@ -7,6 +9,18 @@ export const metadata: Metadata = {
 
 export default async function page() {
     const pb = await createServerClient();
+    const cookieStore = (await cookies()).get(COOKIES_NAME);
+    pb.authStore.loadFromCookie(`${cookieStore?.name}=${cookieStore?.value}`);
+
+    console.log(pb.authStore.record);
+
+    if (pb.authStore.isValid) {
+        return (
+            <div>
+                {pb.authStore.record?.name}
+            </div>
+        )
+    }
 
     return (
         <div className="w-full h-full flex items-center justify-center">

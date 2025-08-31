@@ -1,5 +1,7 @@
 import { createServerClient } from "@/pocketbase/clients/server";
+import { COOKIES_NAME } from "@/pocketbase/constants";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Sign up"
@@ -25,7 +27,9 @@ async function signup(data: FormData) {
         password: password,
         passwordConfirm: password,
     });
+    await pb.collection("users").authWithPassword(email, password);
     await pb.collection("users").requestVerification(email);
+    (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
 }
 
 export default async function page() {
