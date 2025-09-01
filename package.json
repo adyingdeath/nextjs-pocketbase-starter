@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typegen": "npx pocketbase-typegen --env --out ./pocketbase/clients/pocketbase-types.ts"
   },
   "dependencies": {
     "next": "15.5.2",
