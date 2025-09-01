@@ -17,3 +17,13 @@ export async function createServerClient() {
 
     return client;
 }
+
+export async function createServiceClient() {
+    const client = new PocketBase(
+        process.env.NEXT_PUBLIC_POCKETBASE_URL
+    ) as TypedPocketBase;
+
+    client.authStore.save(process.env.POCKETBASE_SECRET_API_KEY!);
+
+    return client;
+}
