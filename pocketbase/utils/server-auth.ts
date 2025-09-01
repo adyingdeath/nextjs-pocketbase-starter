@@ -11,25 +11,35 @@ import { UsersResponse } from "@/pocketbase/clients/pocketbase-types";
 
 export async function signupWithEmailPassword(email: string, password: string, name: string) {
     const pb = await createServerClient();
-    
-    await pb.collection("users").create({
-        name: name,
-        email: email,
-        emailVisibility: true,
-        password: password,
-        passwordConfirm: password,
-    });
-    await pb.collection("users").authWithPassword(email, password);
-    await pb.collection("users").requestVerification(email);
-    (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
+
+    try {
+        await pb.collection("users").create({
+            name: name,
+            email: email,
+            emailVisibility: true,
+            password: password,
+            passwordConfirm: password,
+        });
+        await pb.collection("users").authWithPassword(email, password);
+        await pb.collection("users").requestVerification(email);
+        (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
+    } catch (error) {
+        console.error("Signup error:", error);
+        throw new Error("Failed to create account. The email might already be in use or the data is invalid.");
+    }
 }
 
 export async function signinWithEmailPassword(email: string, password: string) {
     const pb = await createServerClient();
 
-    await pb.collection("users").authWithPassword(email, password);
-    (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
-    redirect("/");
+    try {
+        await pb.collection("users").authWithPassword(email, password);
+        (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
+        redirect("/");
+    } catch (error) {
+        console.error("Signin error:", error);
+        throw new Error("Failed to sign in. Please check your credentials or ensure your email is verified.");
+    }
 }
 
 export async function logout() {
