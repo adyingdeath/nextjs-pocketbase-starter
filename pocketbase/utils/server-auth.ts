@@ -1,25 +1,41 @@
 "use server";
 
-import { createServerClient } from "@/pocketbase/clients/server";
+import { createServerClient, createServiceClient } from "@/pocketbase/clients/server";
 import { cookies } from "next/headers";
 import { COOKIES_NAME } from "@/pocketbase/constants";
 import { redirect } from "next/navigation";
 import { UsersResponse } from "@/pocketbase/clients/pocketbase-types";
+import { ClientResponseError } from "pocketbase";
 
 // Some basic auth actions
 
 
 export async function signupWithEmailPassword(email: string, password: string, name: string) {
-    const pb = await createServerClient();
+    const pb = await createServiceClient();
 
     try {
-        await pb.collection("users").create({
-            name: name,
-            email: email,
-            emailVisibility: true,
-            password: password,
-            passwordConfirm: password,
-        });
+        try {
+            const existingUser = await pb.collection("users").getFirstListItem(`email="${email}"`);
+            // update the user
+            await pb.collection("users").update(existingUser.id, {
+                name: name,
+                password: password,
+                passwordConfirm: password,
+            });
+        } catch (err) {
+            if (err instanceof ClientResponseError && err.status === 404) {
+                // user not found, create new
+                await pb.collection("users").create({
+                    name: name,
+                    email: email,
+                    emailVisibility: true,
+                    password: password,
+                    passwordConfirm: password,
+                });
+            } else {
+                throw err;
+            }
+        }
         await pb.collection("users").authWithPassword(email, password);
         await pb.collection("users").requestVerification(email);
         (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
