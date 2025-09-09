@@ -1,5 +1,6 @@
 import { signinWithEmailPassword } from "@/pocketbase/utils/server-auth";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
 	title: "Sign in"
@@ -16,6 +17,7 @@ async function signin(data: FormData) {
 	}
 
 	await signinWithEmailPassword(email, password);
+	redirect("/");
 }
 
 export default async function page() {
