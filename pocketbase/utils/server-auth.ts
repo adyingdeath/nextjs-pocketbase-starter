@@ -51,7 +51,6 @@ export async function signinWithEmailPassword(email: string, password: string) {
     try {
         await pb.collection("users").authWithPassword(email, password);
         (await cookies()).set(COOKIES_NAME, pb.authStore.exportToCookie());
-        redirect("/");
     } catch (error) {
         console.error("Signin error:", error);
         throw new Error("Failed to sign in. Please check your credentials or ensure your email is verified.");
