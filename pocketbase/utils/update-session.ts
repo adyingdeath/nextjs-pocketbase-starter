@@ -43,18 +43,6 @@ export async function updateSession(request: NextRequest) {
         return pbResponse
     }
 
-    if (
-        !pb.authStore.isValid &&
-        !request.nextUrl.pathname.startsWith('/sign-in') &&
-        !request.nextUrl.pathname.startsWith('/sign-up') &&
-        !request.nextUrl.pathname.startsWith('/api/auth')
-    ) {
-        // no user, potentially respond by redirecting the user to the login page
-        const url = request.nextUrl.clone()
-        url.pathname = '/sign-in'
-        return NextResponse.redirect(url)
-    }
-
     // IMPORTANT: You *must* return the pbResponse object as it is.
     // If you're creating a new response object with NextResponse.next() make sure to:
     // 1. Pass the request in it, like so:
