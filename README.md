@@ -41,6 +41,15 @@ If you can receive the email, everything is set up correctly. You can start deve
 
 ## Some Helpful Info
 
+### Type Generation
+
+This template uses the `pocketbase-typegen` lib to generate type definitions for your Pocketbase instance. You should configure two environment variables first. In `.env.example`, you will see two variables `PB_TYPEGEN_URL` and `PB_TYPEGEN_TOKEN`. You should copy `.env.example` and rename the copied file to `.env`.
+
+- `PB_TYPEGEN_URL`: The address of your Pocketbase instance.
+- `PB_TYPEGEN_TOKEN`: A superuser's `Impersonate auth token`. To get one, open your Pocketbase dashboard. In the system collection `_superusers`, you will find yourself there (because you're a superuser). Click on yourself. In the `Edit _superusers record` side panel, click the three-dot menu button on the top-right. There is an `Impersonate` option. Click on it and set a time. If you want an infinite token duration, you can use `2147483647` because this is the maximum integer value and the maximum number you can use for the duration. Click on `Generate token` and copy that generated token to your `.env` file.
+
+After completing these steps, run `npm run typegen` in your terminal. You can check the generated types in `@/pocketbase/clients/pocketbase-types.ts`. **Every time you change your collections in pocketbase, you should run this command again to update your local types.**
+
 ### getUser()
 
 I've implemented a `getUser()` function in `@/pocketbase/utils/server-auth.ts`, which you can use directly in Server Components. If the user is logged in, the function will return a `Promise<UserInfo>`; otherwise, it will return `Promise<null>`. You can check its usage in the `/` page.
