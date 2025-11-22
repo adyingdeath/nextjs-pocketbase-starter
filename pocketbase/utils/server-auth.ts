@@ -76,3 +76,19 @@ export async function getUser(): Promise<UsersResponse | null> {
         return null;
     }
 }
+
+/**
+ * (Server Side) Get the currently authenticated user from the server-side session.
+ * If the visitor is not logged in, redirect them.
+ * @param url The url you want to send all the logged out vistors to.
+ */
+export async function requireUser(url: string = "/"): Promise<UsersResponse> {
+    const pb = await createServerClient();
+
+    if (pb.authStore.isValid) {
+        return pb.authStore.record as UsersResponse;
+    }
+
+    // If the visitor is logged out, just send them to the given url.
+    redirect(url);
+}
