@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
         await pb.collection("users").confirmVerification(token);
 
-        const redirectUrl = new URL("/dashboard", request.url);
+        const redirectUrl = new URL("/", request.url);
         return NextResponse.redirect(redirectUrl);
     } catch (error) {
         console.error("Verification error:", error);
