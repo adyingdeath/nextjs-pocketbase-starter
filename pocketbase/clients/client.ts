@@ -8,7 +8,7 @@ let singletonClient: TypedPocketBase | null = null;
 
 function getCookie(name: string) {
     const nameEQ = encodeURIComponent(name) + "=";
-    if (document === undefined) return null;
+    if (typeof document === "undefined") return null;
     const ca = document.cookie.split(';');
 
     for (let i = 0; i < ca.length; i++) {
